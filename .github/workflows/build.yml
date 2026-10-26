@@ -1,0 +1,45 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build g++ libsdl2-dev libgl-dev libboost-dev
+
+      - name: Configure
+        run: cmake -S port -B port/build-linux -G Ninja -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build port/build-linux --parallel
+
+      - name: Package (no game data)
+        run: |
+          mkdir -p out/port/build-linux
+          cp port/build-linux/sjfport out/port/build-linux/
+          cp -r tools out/tools
+          cp -r docs out/docs
+          cp LICENSE README.md README.es.md lanzador.sh out/ 2>/dev/null || true
+          mkdir -p out/port/game && cp port/game/README.txt out/port/game/
+          tar -C out -czf sjfport-linux-x86_64.tar.gz .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sjfport-linux-x86_64
+          path: sjfport-linux-x86_64.tar.gz
+
+      - name: Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: sjfport-linux-x86_64.tar.gz

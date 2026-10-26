@@ -1,0 +1,52 @@
+# ============================================================
+# NEVER commit game data. The launcher installs it from the
+# user's own APK into port/game/. Nunca subir datos del juego.
+# ============================================================
+port/game/*
+!port/game/README.txt
+*.apk
+*.obb
+*.xapk
+libsonicjumpfever.so
+*.sla
+*.snd
+*.tex
+*.loc
+
+# Saves / config del usuario
+port/controls.cfg
+tools/launcher/launcher.json
+
+# Build outputs
+port/build/
+port/build-*/
+build/
+dist/
+
+# Toolchains descargadas por el launcher
+tools/boost/
+tools/cmake-*/
+tools/downloads/
+tools/env-linux/
+tools/ffmpeg/
+tools/micromamba/
+tools/mingw64/
+tools/ninja/
+tools/pydeps/
+tools/sdl2/
+tools/zig-cache/
+
+# Análisis derivado del binario original (regenerable, no redistribuir)
+extracted/
+*.bmp
+first_frame.*
+shot_*.*
+
+# Misc
+*.log
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
